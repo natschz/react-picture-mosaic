@@ -1,6 +1,6 @@
 {
   "name": "react-picture-mosaic",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple animated picture mosaic made in react.",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
