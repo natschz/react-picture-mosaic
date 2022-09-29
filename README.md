@@ -7,7 +7,7 @@ React Picture Mosaic is a simple animated picture mosaic.
 This will create a mosaic with 15 columns and 10 rows.
 A new image will appear every 3000 seconds.
 
-```tsx
+```jsx
 <PictureMosaic
   newImageInterval={3000}
   columns={15}
@@ -32,7 +32,7 @@ A new image will appear every 3000 seconds.
 
 ### Custom Animation
 
-```tsx
+```jsx
 const customInitialAnimation = {
   opacity: 0,
   left: 0,
