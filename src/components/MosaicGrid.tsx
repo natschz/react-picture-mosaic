@@ -33,7 +33,7 @@ const MosaicGrid = (
   const [imageState, setImageState] = useState<ImageState>({
     lastSourceIndex: -1,
     lastTargetIndex: -1,
-    visibleImages: [...Array(rows * columns).keys()].map(_ => null)
+    visibleImages: Array.from(Array(rows * columns).keys()).map(_ => null)
   })
 
   const containerStyle: CSSProperties = {
@@ -44,8 +44,8 @@ const MosaicGrid = (
     width: "100%",
     height: "100%",
     display: "grid",
-    gridTemplateRows: [...Array(rows).keys()].map(_ => "1fr").join(" "),
-    gridTemplateColumns: [...Array(columns).keys()].map(_ => "1fr").join(" "),
+    gridTemplateRows: Array.from(Array(rows).keys()).map(_ => "1fr").join(" "),
+    gridTemplateColumns: Array.from(Array(columns).keys()).map(_ => "1fr").join(" "),
   }
 
   useEffect(() => {
@@ -56,7 +56,7 @@ const MosaicGrid = (
 
       if (targetImages.length < expectedImages) {
         const missingImageAmount = expectedImages - targetImages.length
-        const additionalImages = [...Array(missingImageAmount).keys()].map(_ => null)
+        const additionalImages = Array.from(Array(missingImageAmount).keys()).map(_ => null)
         targetImages = [...targetImages, additionalImages]
       }
 

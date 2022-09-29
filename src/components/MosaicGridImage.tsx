@@ -4,8 +4,6 @@ import {ControllerUpdate} from "@react-spring/core/dist/declarations/src/types";
 
 export interface MosaicGridImageProps {
   image: any
-  showPreview: boolean | undefined
-  previewTimeout: number | undefined
   gridRect: DOMRect | undefined
   customBlockDivStyle: CSSProperties | undefined
   customInitialAnimation: any | undefined
@@ -51,12 +49,12 @@ const defaultAnimations = (element: any, gridRect: DOMRect | undefined) => {
 
 const MosaicGridImage = ({image, gridRect, customInitialAnimation, customAnimations, customBlockDivStyle}: MosaicGridImageProps) => {
   const ref = useRef<any>()
-  const animations = useMemo(() => {
+  const initialAnimation: any = useMemo(() => (customInitialAnimation || defaultInitialAnimation), [])
+  const animations: any[] = useMemo(() => {
     if (ref.current) {
       return customAnimations ? customAnimations(ref.current, gridRect) : defaultAnimations(ref.current, gridRect);
     }
   }, [ref.current])
-  const initialAnimation = useMemo(() => (customInitialAnimation || defaultInitialAnimation), [])
 
   const [styles, animate] = useSpring(() => (initialAnimation))
   const [animationFinished, setAnimationFinished] = useState(false)
@@ -64,7 +62,6 @@ const MosaicGridImage = ({image, gridRect, customInitialAnimation, customAnimati
   useEffect(() => {
     if (animations) {
       animations.forEach((animation, index) => {
-
         if (index == animations.length - 1) {
           animate.start({
             ...animation,
@@ -82,7 +79,7 @@ const MosaicGridImage = ({image, gridRect, customInitialAnimation, customAnimati
     overflow: "hidden",
     mixBlendMode: "overlay",
   }
-  let blockDivStyle = {
+  let blockDivStyle: CSSProperties = {
     position: "absolute",
     width: "100%",
     height: "100%",
