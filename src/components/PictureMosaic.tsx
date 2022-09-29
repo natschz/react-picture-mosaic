@@ -8,9 +8,9 @@ export interface PictureMosaicProps {
   rows: number
   columns: number
   newImageInterval: number
-  customBlockDivStyle: CSSProperties | undefined
-  customInitialAnimation: any | undefined
-  customAnimations: (element: any, gridRect: DOMRect | undefined) => any | undefined
+  customBlockDivStyle?: CSSProperties | undefined
+  customInitialAnimation?: any | undefined
+  customAnimations?: (element: any, gridRect: DOMRect | undefined) => any
 }
 
 const PictureMosaic = (

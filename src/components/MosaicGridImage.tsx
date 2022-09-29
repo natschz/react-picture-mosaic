@@ -6,8 +6,8 @@ export interface MosaicGridImageProps {
   image: any
   gridRect: DOMRect | undefined
   customBlockDivStyle: CSSProperties | undefined
-  customInitialAnimation: any | undefined
-  customAnimations: (element: any, gridRect: DOMRect | undefined) => any | undefined
+  customInitialAnimation?: any | undefined
+  customAnimations?: ((element: any, gridRect: DOMRect | undefined) => any) | undefined
 }
 
 const defaultInitialAnimation: ControllerUpdate<PickAnimated<{ opacity: number, left: number, top: number, transform: string }>> = {
