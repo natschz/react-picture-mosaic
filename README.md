@@ -15,7 +15,7 @@ const loadImage = (column, row) => {
   rows={10}
   newImageInterval={3000}
   overlayImage={"https://path.to.image"}
-  loadImage={mosaicImages}
+  loadImage={loadImage}
 />
 ```
 

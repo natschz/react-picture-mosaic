@@ -10,7 +10,7 @@ export interface MosaicGridImageProps {
   gridRect: DOMRect
 }
 
-const MosaicGridImage = ({index, image, gridRect}: MosaicGridImageProps) => {
+const CachedMosaicGridImage = ({index, image, gridRect}: MosaicGridImageProps) => {
   const mosaicConfig = useMosaicConfig()
   const {width, height, translateX, translateY} = useImageInformation(index, gridRect)
 
@@ -72,4 +72,9 @@ const MosaicGridImage = ({index, image, gridRect}: MosaicGridImageProps) => {
   </>;
 }
 
+
+const MosaicGridImage = ({index, image, gridRect}: MosaicGridImageProps) => {
+  const cachedComponent = useMemo(() => <CachedMosaicGridImage index={index} image={image} gridRect={gridRect}/>, [image, gridRect])
+  return cachedComponent
+}
 export default MosaicGridImage
