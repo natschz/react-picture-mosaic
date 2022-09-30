@@ -18,9 +18,9 @@ const Template: ComponentStory<typeof PictureMosaic> = (args) => <PictureMosaic 
 
 export const Default = Template.bind({});
 Default.args = {
-  newImageInterval: 3000,
-  columns: 15,
+  columns: 10,
   rows: 10,
   overlayImage: overlayImage,
-  mosaicImages: [...Array(16 * 9).keys()].map(_ => galleryImage)
+  loadImage: () => { return galleryImage },
+  imageInterval: 3000,
 };

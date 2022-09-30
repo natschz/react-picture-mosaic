@@ -1,104 +1,75 @@
 import React, {CSSProperties, useEffect, useMemo, useRef, useState} from "react"
 import {useSpring, animated, PickAnimated} from "@react-spring/web";
-import {ControllerUpdate} from "@react-spring/core/dist/declarations/src/types";
+import {useMosaicConfig} from "../utils/mosaicConfigProvider";
+import MosaicGridBlockingDiv from "./MosaicGridBlockingDiv";
+import useImageInformation from "../utils/useImageInformation";
 
 export interface MosaicGridImageProps {
+  index: number
   image: any
-  gridRect: DOMRect | undefined
-  customBlockDivStyle: CSSProperties | undefined
-  customInitialAnimation?: any | undefined
-  customAnimations?: ((element: any, gridRect: DOMRect | undefined) => any) | undefined
+  gridRect: DOMRect
 }
 
-const defaultInitialAnimation: ControllerUpdate<PickAnimated<{ opacity: number, left: number, top: number, transform: string }>> = {
-  opacity: 0,
-  left: 0,
-  top: 0,
-  transform: "perspective(500px) translate3d(0px, 0px, 0px)"
-}
+const MosaicGridImage = ({index, image, gridRect}: MosaicGridImageProps) => {
+  const mosaicConfig = useMosaicConfig()
+  const {width, height, translateX, translateY} = useImageInformation(index, gridRect)
 
-const defaultAnimations = (element: any, gridRect: DOMRect | undefined) => {
-  const rect = element.getBoundingClientRect()
-
-  const targetX = 160
-  const targetY = 80
-
-  return [
-    {
-      delay: 0,
-      config: {
-        duration: 0
-      },
-      opacity: 1,
-      left: (element.offsetLeft) * -1,
-      top: (element.offsetTop) * -1,
-      transform: `perspective(500px) translate3d(${targetX}px, ${targetY}px, 399px)`
-    },
-    {
-      delay: 1000,
-      config: {
-        duration: 1000
-      },
-      opacity: 0.3,
-      left: 0,
-      top: 0,
-      transform: `perspective(500px) translate3d(0px, 0px, 0px)`
-    }
-  ]
-}
-
-const MosaicGridImage = ({image, gridRect, customInitialAnimation, customAnimations, customBlockDivStyle}: MosaicGridImageProps) => {
   const ref = useRef<any>()
-  const initialAnimation: any = useMemo(() => (customInitialAnimation || defaultInitialAnimation), [])
-  const animations: any[] = useMemo(() => {
-    if (ref.current) {
-      return customAnimations ? customAnimations(ref.current, gridRect) : defaultAnimations(ref.current, gridRect);
-    }
-  }, [ref.current])
 
-  const [styles, animate] = useSpring(() => (initialAnimation))
+  const currentImage = useRef()
+  const oldImage = useRef<any | null>()
+  const [styles, animate] = useSpring(() => (mosaicConfig.imageContainerStyle))
   const [animationFinished, setAnimationFinished] = useState(false)
 
-  useEffect(() => {
-    if (animations) {
-      animations.forEach((animation, index) => {
-        if (index == animations.length - 1) {
-          animate.start({
-            ...animation,
-            onRest: () => {setAnimationFinished(true)}
-          })
-        } else {
-          animate.start(animation)
+  const animations = useMemo(() => {
+    if (ref.current) {
+      const column = index % mosaicConfig.columns;
+      const row = Math.floor(index / mosaicConfig.columns)
+      const animations = mosaicConfig.createImageContainerAnimations(column, row, ref.current, gridRect, mosaicConfig)
+      animations[animations.length - 1] = {
+        ...animations[animations.length - 1],
+        onRest: () => {
+          setAnimationFinished(true)
+          oldImage.current = null
         }
+      }
+      return animations
+    }
+  }, [ref.current, mosaicConfig.createImageContainerAnimations, index, gridRect, setAnimationFinished, oldImage])
+
+  useEffect(() => {
+    if (animations && image && currentImage.current !== image) {
+      if (currentImage.current) {
+        oldImage.current = currentImage.current
+      }
+      currentImage.current = image;
+      animations.forEach((animation, index) => {
+        animate.start(animation)
       });
     }
-  }, [animate, animations, setAnimationFinished])
+  }, [image, animate, animations, setAnimationFinished])
 
   const imageStyles: CSSProperties = {
-    maxWidth: "100%",
-    overflow: "hidden",
-    mixBlendMode: "overlay",
-  }
-  let blockDivStyle: CSSProperties = {
+    zIndex: 400,
+    ...styles,
+    display: "inline-block",
     position: "absolute",
-    width: "100%",
-    height: "100%",
-    zIndex: 300,
-    backgroundColor: "white"
-  }
-  if (customBlockDivStyle) {
-    blockDivStyle = {
-      ...blockDivStyle,
-      ...customBlockDivStyle
-    }
+    backgroundImage: image && `url("${image}")`,
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
   }
 
-  return <div ref={ref} style={{position: "relative"}}>
-    {!animationFinished && <div style={blockDivStyle}/>}
-    <animated.div style={{...styles, position: "relative", zIndex: 400,}}>
-    {image && <img src={image} style={imageStyles} alt=""/>}
-    </animated.div>
-  </div>;
+  if (animationFinished) {
+      imageStyles["width"] = `${width}px`
+      imageStyles["height"] = `${height}px`
+      imageStyles["transform"] = `translate(${translateX}px, ${translateY}px)`
+  }
+
+  return <>
+    {!animationFinished && gridRect && <MosaicGridBlockingDiv index={index} gridRect={gridRect} />}
+    <animated.div ref={ref} style={imageStyles}></animated.div>
+  </>;
 }
 
 export default MosaicGridImage

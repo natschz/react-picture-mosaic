@@ -1,25 +1,26 @@
 import React, {CSSProperties} from "react"
+import {useMosaicConfig} from "../utils/mosaicConfigProvider";
 
-export interface MosaicOverlayProps {
-  overlayImage: any
-}
+const MosaicOverlay = () => {
+  const mosaicConfig = useMosaicConfig()
 
-const MosaicOverlay = ({overlayImage}: MosaicOverlayProps) => {
-  const containerStyle: CSSProperties = {
+  let containerStyle: CSSProperties = {
     zIndex: 200,
     position: "absolute",
     left: 0,
     top: 0,
     width: "100%",
     height: "100%",
-    backgroundImage: `url("${overlayImage}")`,
+    overflow: "hidden",
+    backgroundImage: `url("${mosaicConfig.overlayImage}")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     backgroundSize: "cover",
-    mixBlendMode: "overlay"
+    mixBlendMode: "overlay",
+    ...mosaicConfig.overlayStyle
   }
 
-  return <div style={containerStyle}/>
+  return <div className={"mosaic-overlay"} style={containerStyle}/>;
 }
 
 export default MosaicOverlay

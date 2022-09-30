@@ -7,14 +7,15 @@ const useElementBoundingRect = (): [MutableRefObject<any>, DOMRect | undefined] 
   useEffect(() => {
     if (ref.current) {
       const listener = () => {
+        const a = ref.current!.getBoundingClientRect()
         setRect(ref.current!.getBoundingClientRect())
       };
 
       listener()
-      document.addEventListener("resize",  listener)
+      window.addEventListener("resize",  listener)
 
       return () => {
-        document.removeEventListener("resize",  listener)
+        window.removeEventListener("resize",  listener)
       }
     }
   }, [ref.current])

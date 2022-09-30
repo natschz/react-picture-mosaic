@@ -1,15 +1,28 @@
 {
   "name": "react-picture-mosaic",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "A simple animated picture mosaic made in react.",
+  "author": "Natschz <contact@natschz.com> (https://github.com/natschz)",
+  "homepage": "https://github.com/natschz/react-picture-mosaic",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/natschz/react-picture-mosaic"
+  },
   "main": "dist/index.js",
   "module": "dist/index.es.js",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
   ],
+  "scripts": {
+    "build": "rollup -c",
+    "storybook": "start-storybook -p 3333 -s public",
+    "build-storybook": "build-storybook -s public",
+    "bump-version": "npm pkg set version=$(npm pkg get version | sed 's/\"//g' | awk -F. -v OFS=. '{$NF += 1 ; print}')"
+  },
   "peerDependencies": {
-    "react": "^17.0.2"
+    "re^act": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "dependencies": {
     "@react-spring/web": "^9.5.5"
@@ -45,11 +58,6 @@
     "web-vitals": "^2.1.2",
     "webpack": "^5.65.0"
   },
-  "scripts": {
-    "build": "rollup -c",
-    "storybook": "start-storybook -p 3333 -s public",
-    "build-storybook": "build-storybook -s public"
-  },
   "eslintConfig": {
     "extends": [
       "react-app",
@@ -69,8 +77,9 @@
   "keywords": [
     "react",
     "picture",
+    "image",
+    "photo",
     "mosaic"
   ],
-  "author": "Natschz",
   "license": "MIT"
 }
