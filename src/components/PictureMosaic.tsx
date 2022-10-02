@@ -17,13 +17,13 @@ export interface PictureMosaicProps {
 
   imageSeed?: string[]
   loop?: boolean
-  drawTileToCanvas?: (canvas: any, image: MosaicImage, width: number, height: number, x: number, y: number) => void
-  nextTileTarget?: (previousColumn: number, previousRow: number, config: MosaicConfig) => { column: number, row: number }
   overlayStyle?: CSSProperties
   blockingTileStyle?: CSSProperties
-  canvasStyle: CSSProperties
   createTileStyle?: (x: number, y: number, width: number, height: number) => CSSProperties
   createTileAnimations?: (column: number, row: number, element: HTMLElement, gridRect: DOMRect, config: MosaicConfig) => any[]
+  canvasStyle?: CSSProperties
+  drawTileToCanvas?: (canvas: any, image: MosaicImage, width: number, height: number, x: number, y: number) => void
+  nextTileTarget?: (previousColumn: number, previousRow: number, config: MosaicConfig) => { column: number, row: number }
 }
 
 const PictureMosaic = (props: PictureMosaicProps) => {
