@@ -1,7 +1,6 @@
 # React Picture Mosaic
 
-React Picture Mosaic is a simple animated picture mosaic, 
-which allows some customization like different animations and styles.
+React Picture Mosaic is a simple animated picture mosaic.
 
 ![react-picture-mosaic](https://user-images.githubusercontent.com/7605522/193438913-a1a1dfb3-ffec-4669-9746-52b133c42d06.gif)
 
