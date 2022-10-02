@@ -22,13 +22,26 @@ const loadImage = (column, row) => {
   return "https://path.to.image"
 }
 
-<PictureMosaic
-  columns={15}
-  rows={10}
-  overlayImage={"https://path.to.image"}
-  loadImage={loadImage}
-  imageInterval={3000}
-/>
+
+const containerStyle = {
+  position: "absolute",
+  top: "0",
+  left: "0",
+  margin: "50px",
+  width: "500px",
+  height: "350px"
+}
+
+// The container needs to have a height and width, otherwise nothing will be shown.
+<div style={containerStyle}>
+    <PictureMosaic
+      columns={15}
+      rows={10}
+      overlayImage={"https://path.to.image"}
+      loadImage={loadImage}
+      imageInterval={3000}
+    />
+</div>
 ```
 
 ### Custom blend mode
