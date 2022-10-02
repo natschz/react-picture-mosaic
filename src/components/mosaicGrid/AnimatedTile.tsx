@@ -59,6 +59,8 @@ const CachedAnimatedTile = (
     ...styles,
     display: "inline-block",
     position: "absolute",
+    left: 0,
+    top: 0,
     backgroundImage: image.image && `url("${image.image}")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",

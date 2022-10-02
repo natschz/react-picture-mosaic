@@ -15,6 +15,8 @@ const BlockingTile = ({index}: MosaicGridBlockingDivProps) => {
   let blockDivStyle: CSSProperties = {
     display: "inline-block",
     position: "absolute",
+    left: 0,
+    top: 0,
     width: `${width}px`,
     height: `${height}px`,
     transform: `translate(${x}px, ${y}px)`,

@@ -20,6 +20,8 @@
 //     zIndex: 400,
 //     display: "inline-block",
 //     position: "absolute",
+//     left: 0,
+//     top: 0,
 //     ...tileStyles,
 //     backgroundImage: image.image && `url("${image.image}")`,
 //     backgroundRepeat: "no-repeat",
