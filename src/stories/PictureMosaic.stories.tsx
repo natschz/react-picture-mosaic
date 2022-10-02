@@ -14,7 +14,23 @@ export default {
   ],
 } as ComponentMeta<typeof PictureMosaic>;
 
-const Template: ComponentStory<typeof PictureMosaic> = (args) => <PictureMosaic {...args} />;
+const ContainerTemplate: ComponentStory<typeof PictureMosaic> = (args) => <div style={{
+  width: "500px",
+  height: "350px",
+  margin: "50px"
+}}>
+  <PictureMosaic {...args} />
+</div>;
+
+const Template: ComponentStory<typeof PictureMosaic> = (args) => <div style={{
+  position: "absolute",
+  width: "100%",
+  height: "100%",
+  left: "0",
+  top: "0"
+}}>
+  <PictureMosaic {...args} />
+</div>;
 
 export const Default = Template.bind({});
 Default.args = {
@@ -22,6 +38,16 @@ Default.args = {
   rows: 10,
   overlayImage: overlayImage,
   loadImage: () => { return galleryImage },
+  imageInterval: 3000,
+};
+
+export const Container = ContainerTemplate.bind({});
+Container.args = {
+  columns: 10,
+  rows: 10,
+  overlayImage:  `https://picsum.photos/1920/1080?random=${Math.random()}`,
+  imageSeed: Array.from(Array(100).keys()).map(_ => `https://picsum.photos/1920/1080?random=${Math.random()}`),
+  loadImage: () => { return  `https://picsum.photos/1920/1080?random=${Math.random()}` },
   imageInterval: 3000,
 };
 

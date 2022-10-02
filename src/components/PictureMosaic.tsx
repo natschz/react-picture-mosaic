@@ -47,8 +47,16 @@ const PictureMosaic = (props: PictureMosaicProps) => {
     }
   }, [props])
 
+  const containerStyle: CSSProperties = {
+    width: "100%",
+    height: "100%",
+    position: "relative",
+  }
+
   return <MosaicConfigProvider config={config}>
-    <MosaicGrid/>
+    <div style={containerStyle}>
+      <MosaicGrid/>
+    </div>
   </MosaicConfigProvider>
 }
 
