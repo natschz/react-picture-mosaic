@@ -1,7 +1,7 @@
 {
   "name": "react-picture-mosaic",
   "version": "1.2.1",
-  "description": "A simple animated picture mosaic made in react.",
+  "description": "A simple animated picture mosaic.",
   "author": "Natschz <contact@natschz.com> (https://github.com/natschz)",
   "homepage": "https://github.com/natschz/react-picture-mosaic",
   "repository": {
