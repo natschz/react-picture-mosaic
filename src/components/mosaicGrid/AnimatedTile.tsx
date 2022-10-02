@@ -7,7 +7,7 @@ export interface CachedAnimatedTileProps {
   index: number
   image: MosaicImage
   gridRect: DOMRect
-  onAnimationFinished: (index) => void
+  onAnimationFinished: (index: number) => void
 }
 
 const CachedAnimatedTile = (
@@ -20,7 +20,7 @@ const CachedAnimatedTile = (
 ) => {
   const mosaicConfig = useMosaicConfig()
 
-  const [ref, setRef] = useState<HTMLDivElement>()
+  const [ref, setRef] = useState<HTMLDivElement | null>()
   const currentImage = useRef<MosaicImage>()
 
   const [styles, animate] = useSpring(() => (mosaicConfig.createTileStyle(0, 0, 0, 0)))

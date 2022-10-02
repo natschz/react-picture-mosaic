@@ -10,7 +10,7 @@ export interface ImageInformation {
   y: number,
 }
 
-export const getImageInformation = (index, columns, rows, gridWidth, gridHeight): ImageInformation => {
+export const getImageInformation = (index: number, columns: number, rows: number, gridWidth: number, gridHeight: number): ImageInformation => {
   const column = index % columns
   const row = Math.floor(index / columns)
   const width = Math.round((gridWidth || 1) / columns)

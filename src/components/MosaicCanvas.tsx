@@ -3,7 +3,7 @@ import {MosaicConfig, useMosaicConfig} from "../utils/MosaicConfigProvider";
 import {MosaicImage, useMosaicGrid} from "../utils/MosaicGridProvider";
 import {getImageInformation} from "../utils/useImageInformation";
 
-export const drawCanvasImage = (canvas: any, image: MosaicImage, index: number, columns: number, rows: number, gridRect: DOMRect, drawTileToCanvas) => {
+export const drawCanvasImage = (canvas: any, image: MosaicImage, index: number, columns: number, rows: number, gridRect: DOMRect, drawTileToCanvas: (canvas: any, image: MosaicImage, width: number, height: number, x: number, y: number) => void) => {
   const {width, height, x, y} = getImageInformation(index, columns, rows, gridRect?.width, gridRect?.height)
 
   if (!image.shouldAnimate || image.animationFinished) {
@@ -13,7 +13,7 @@ export const drawCanvasImage = (canvas: any, image: MosaicImage, index: number, 
 
 interface MosaicCanvasProps {
   canvasRef?: HTMLCanvasElement
-  setCanvasRef: (HTMLCanvasElement) => void
+  setCanvasRef: (ref: HTMLCanvasElement) => void
 }
 
 const MosaicCanvas = ({canvasRef, setCanvasRef}: MosaicCanvasProps) => {
@@ -23,7 +23,7 @@ const MosaicCanvas = ({canvasRef, setCanvasRef}: MosaicCanvasProps) => {
   useEffect(() => {
     if (canvasRef) {
       const context = canvasRef.getContext('2d');
-      context.clearRect(0, 0, canvasRef.width, canvasRef.height);
+      context!.clearRect(0, 0, canvasRef.width, canvasRef.height);
 
       images.forEach((image, index) => {
         drawCanvasImage(canvasRef, image, index, columns, rows, gridRect, drawTileToCanvas)

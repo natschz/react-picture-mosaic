@@ -40,7 +40,7 @@ export const defaultCreateTileAnimations = (column: number, row: number, element
   ]
 }
 
-export const defaultCreateTileStyle = (x, y, width, height): CSSProperties => {
+export const defaultCreateTileStyle = (x: number, y: number, width: number, height: number): CSSProperties => {
   return {
     zIndex: 400,
     opacity: 0.3,

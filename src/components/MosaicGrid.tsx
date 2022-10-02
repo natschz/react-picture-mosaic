@@ -158,7 +158,6 @@ const MosaicGrid = () => {
     {gridRect && <MosaicGridProvider
       images={images}
       onAnimationFinished={onAnimationFinished}
-      renderToCanvas={renderToCanvas}
       gridRect={gridRect}
     >
       <div style={wrapperStyle}>
