@@ -4,11 +4,12 @@ React Picture Mosaic is a simple animated picture mosaic.
 
 ![react-picture-mosaic](https://user-images.githubusercontent.com/7605522/193438913-a1a1dfb3-ffec-4669-9746-52b133c42d06.gif)
 
+A simple example can be found [here.](https://codesandbox.io/s/react-picture-mosaic-example-51cs6l)
+
 
 ## Getting Started
 
 #### Install
-Install react-picture-mosaic
 ```shell
 npm i --save react-picture-mosaic
 ```
