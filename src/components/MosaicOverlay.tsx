@@ -1,5 +1,5 @@
 import React, {CSSProperties} from "react"
-import {useMosaicConfig} from "../utils/mosaicConfigProvider";
+import {useMosaicConfig} from "../utils/MosaicConfigProvider";
 
 const MosaicOverlay = () => {
   const mosaicConfig = useMosaicConfig()

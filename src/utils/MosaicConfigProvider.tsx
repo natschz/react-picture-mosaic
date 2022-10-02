@@ -1,17 +1,21 @@
 import {createContext, CSSProperties, ReactNode, useContext} from "react";
+import {MosaicImage} from "./MosaicGridProvider";
 
 export interface MosaicConfig {
   columns: number
   rows: number
-  overlayImage: any
-  loadImage: (column: number, row: number) => any
+  overlayImage: string
+  loadImage: (column: number, row: number) => string
   imageInterval: number
+  imageSeed: string[]
   loop: boolean
-  nextImageTarget: (previousColumn: number, previousRow: number) => { column: number, row: number }
   overlayStyle: CSSProperties
   blockingTileStyle: CSSProperties
-  imageContainerStyle: any
-  createImageContainerAnimations: (column: number, row: number, element: HTMLElement, gridRect: DOMRect, config: MosaicConfig) => any[]
+  createTileStyle: (x: number, y: number, width: number, height: number) => CSSProperties
+  createTileAnimations: (column: number, row: number, element: HTMLElement, gridRect: DOMRect, config: MosaicConfig) => any[]
+  canvasStyle: CSSProperties
+  drawTileToCanvas: (canvas: any, image: MosaicImage, width: number, height: number, x: number, y: number) => void
+  nextTileTarget: (previousColumn: number, previousRow: number, config: MosaicConfig) => { column: number, row: number }
 }
 
 const MosaicContext = createContext<MosaicConfig | null>(null)

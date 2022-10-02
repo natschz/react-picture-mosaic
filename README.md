@@ -1,21 +1,31 @@
 # React Picture Mosaic
 
-React Picture Mosaic is a simple animated picture mosaic.
+React Picture Mosaic is a simple animated picture mosaic, 
+which allows some customization like different animations and styles.
 
-## Usage
+## Getting Started
+
+#### Install
+Install react-picture-mosaic
+```shell
+npm i --save react-picture-mosaic
+```
+
+#### Basic usage    
 
 ```jsx
+import PictureMosaic from "react-picture-mosaic";
+
 const loadImage = (column, row) => {
-  // ... get the image some way
   return "https://path.to.image"
 }
 
 <PictureMosaic
   columns={15}
   rows={10}
-  newImageInterval={3000}
   overlayImage={"https://path.to.image"}
   loadImage={loadImage}
+  imageInterval={3000}
 />
 ```
 
@@ -27,6 +37,7 @@ const overlayStyle = {
 }
 
 <PictureMosaic
+  // required params...
   overlayStyle={overlayStyle}
 />
 ```
@@ -34,16 +45,14 @@ const overlayStyle = {
 ### Custom image positioning
 It is possible to overwrite the algorithm which places the images. 
 
-```jsx
-// Randomly Position the images
-const rows = 10;
-const columns = 10;
+This will place the images completely random.
 
-const nextImageTarget =  (previousColumn, previousRow) => {
-  const maxIndex = columns * rows
+```jsx
+const nextTileTarget =  (previousColumn, previousRow, config) => {
+  const maxIndex = config.columns * config.rows
   const randomIndex = Math.floor(Math.random()*(maxIndex + 1))
-  const column = randomIndex % columns
-  const row = Math.floor(randomIndex / columns)
+  const column = randomIndex % config.columns
+  const row = Math.floor(randomIndex / config.columns)
 
   return {
     column,
@@ -53,31 +62,30 @@ const nextImageTarget =  (previousColumn, previousRow) => {
 
 <PictureMosaic
   // required params...
-  columns={15}
-  rows={10}
-  nextImageTarget={nextImageTarget}
+  nextTileTarget={nextTileTarget}
 />
 ```
 
 ### Custom animation
 It is also possible to create some custom animations, just mind that every property you want to animate,
-has to be present in the imageContainerStyle as well.
+has to be present in the createTileStyle as well.
 
 _Also keep in mind that delays and animation duration are not respected by the interval._
 
 _Besides the normal css attributes, there are some react-spring attributes like `delay` or `{config: duration}`._ 
 
 ```jsx
-// Instead of having the preview image in the midel the are now in the buttom right and fly in quite fast
-const customImageContainerStyle = {
-  opacity: 0,
-  zIndex: 400,
-  width: `0px`,
-  height: `0px`,
-  transform: "translate(0px, 0px)"
+const createTileStyle = (x, y, width, height) => {
+  return {
+    zIndex: 400,
+    opacity: 0.3,
+    width: `${width}px`,
+    height: `${height}px`,
+    transform: `translate(${x}px, ${y}px)`
+  }
 }
 
-const customCreateImageContainerAnimations = (column, row, element, gridRect, config) => {
+const createTileAnimations = (column, row, element, gridRect, config) => {
   const width = Math.round((gridRect?.width || 1) / config.columns)
   const height = Math.round((gridRect?.height || 1) / config.rows)
   const translateX = column * width
@@ -117,31 +125,63 @@ const customCreateImageContainerAnimations = (column, row, element, gridRect, co
 
 <PictureMosaic
   // required params...
-  imageContainerStyle={customImageContainerStyle}
-  createImageContainerAnimations={customCreateImageContainerAnimations}
+  createTileStyle={createTileStyle}
+  createTileAnimations={createTileAnimations}
 />
 ```
 
-## Parameters
+# Parameters
 
-### Required Parameters
+For further customization reference the parameters below.
 
-| Option            | Description                                                                                                                                                |
-|-------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **columns**       | Number of columns the displayed mosaic will have.                                                                                                          |
-| **rows**          | Number of rows the displayed mosaic will have.                                                                                                             |
-| **overlayImage**  | Image which the mosaic build up to.                                                                                                                        |
-| **loadImage**     | This function will be called everytime a new image is added to the mosaic and gets the targeted row and column passed as arguments`(column, row) => any` . |
-| **imageInterval** | Interval in milliseconds in which new images will be added to the mosaic.                                                                                  |
+## Required Parameters
 
-### Optional Parameters
+### `columns: number`
+Number of columns for the grid
 
-| Option                             | Description                                                                                                                                                                                                                                                                                                                                                                                       |
-|------------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| **loop**                           | `default: true` If set to false, then after all tiles are filled the mosaic will stop.                                                                                                                                                                                                                                                                                                            |
-| **nextImageTarget**                | A function determining the next target column and row `(previousColumn, previousRow) => {column, row}`. (Previous values will be column: maxColumns-1 and row: maxRows-1 for the first image)                                                                                                                                                                                                     |
-| **overlayStyle**                   | Additional styles for the overlayImage. (CSSProperties)                                                                                                                                                                                                                                                                                                                                           |
-| **blockingTileStyle**              | Each tile/cell of the mosaic has a blocking tile, which can be style trough this. (CSSProperties)                                                                                                                                                                                                                                                                                                 |
-| **imageContainerStyle**            | The style of the image container.                                                                                                                                                                                                                                                                                                                                                                 |
-| **createImageContainerAnimations** | A function which should return a array of (react-spring style) animations, getting the column and row of the image, the image element as well as the bounding rect of the grid container and the current config. `(element, column, row, gridRect, config) => any[]`<br/> _Note that every property you are trying to animate, should appear in the imageContainer styles so it can be animated._ |
+### `rows: number`
+Number of rows for the grid
 
+### `overlayImage: string`
+Image which the whole mosaic builds up to
+
+### `loadImage: (column: number, row: number) => string`
+Called everytime a new image is added two the grid, where `column` and `row` is the targeted tile position.<br/>
+This should return the path to the image that should be shown on this tile.
+
+### `imageInterval: number`
+Interval (in milliseconds) in which new images will appear. <br/>
+_Note that this interval is not the time between new images. So if the interval is 3 seconds but the image animation takes 5 then you will have two overlapping animations_
+
+## Optional Parameters
+
+### `imageSeed?: string[]`
+It is possible to seed the mosaic with images, this then should just be an array of paths.<br/>
+
+### `loop?: boolean` 
+`default: true`<br/>
+If true then new images will be added even if every tile of the mosaic has a image.
+
+### `overlayStyle?: CSSProperties`
+Styles for the overlay image.
+
+### `blockingTileStyle?: CSSProperties`
+Before a tile is set to an image, it is blocked by another tile, which is just white. You can overwrite the style 
+of those blocking tiles trough this.
+
+### `createTileStyle?: (x: number, y: number, width: number, height: number) => CSSProperties`
+So that css properties can be animated, they have to appear here. (The default can be found [here](src/configs/defaultConfig.tsx))
+
+### `createTileAnimations?: (column: number, row: number, element: HTMLElement, gridRect: DOMRect, config: MosaicConfig) => any[]`
+Return an array of css properties and also there is the option for some additional react-spring properties (version 9).
+(The default can be found [here](src/configs/defaultConfig.tsx))
+
+### `canvasStyle: CSSProperties`
+After tiles are animated, they will be drawn to a canvas, that canvas can be styled trough this property.
+
+### `drawTileToCanvas?: (canvas: any, image: MosaicImage, width, height, x, y) => void`
+After tiles are animated, they will be drawn to a canvas, you can handle how images will be drawn on the canvas
+trough this property. (The default can be found [here](src/configs/defaultConfig.tsx))
+
+### `nextTileTarget?: (previousColumn: number, previousRow: number, config: MosaicConfig) => { column: number, row: number }`
+Trough this it is possible to define the next target tile, where the next image will be placed in. (The default can be found [here](src/configs/defaultConfig.tsx))

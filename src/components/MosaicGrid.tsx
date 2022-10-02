@@ -1,28 +1,116 @@
-import React, {CSSProperties, useEffect, useMemo, useRef, useState} from "react"
-import MosaicGridImage from "./MosaicGridImage";
+import React, {CSSProperties, useCallback, useEffect, useRef, useState} from "react"
 import useElementBoundingRect from "../utils/useElementBoundingRect";
-import {useMosaicConfig} from "../utils/mosaicConfigProvider";
+import {useMosaicConfig} from "../utils/MosaicConfigProvider";
 import MosaicOverlay from "./MosaicOverlay";
+import Tile from "./mosaicGrid/Tile";
+import {MosaicGridProvider, MosaicImage} from "../utils/MosaicGridProvider";
+import {getImageInformation} from "../utils/useImageInformation";
+import MosaicCanvas, {drawCanvasImage} from "./MosaicCanvas";
+
+const defaultMosaicImage: MosaicImage = {
+  animationFinished: false,
+  shouldAnimate: false,
+  showBlockingTile: true
+}
+
+const defaultMosaicAnimatedImage: MosaicImage = {
+  animationFinished: false,
+  shouldAnimate: true,
+  showBlockingTile: true
+}
+
+const defaultMosaicSeedImage: MosaicImage = {
+  animationFinished: false,
+  shouldAnimate: false,
+  showBlockingTile: false
+}
 
 const MosaicGrid = () => {
   const mosaicConfig = useMosaicConfig()
   const [gridRef, gridRect] = useElementBoundingRect()
-  const imageWidth = (gridRect?.width || 1) / mosaicConfig.columns
-  const imageHeight = (gridRect?.height || 1) / mosaicConfig.rows
-  const [images, setImages] = useState<any[]>([])
-  const shouldAddImages = mosaicConfig.loop || images.some(image => !image)
+  const [canvasRef, setCanvasRef] = useState<HTMLCanvasElement>()
+  const [images, setImages] = useState<MosaicImage[]>(mosaicConfig.imageSeed.map(image => ({
+    ...defaultMosaicSeedImage,
+    image
+  })))
+  const shouldAddImages = mosaicConfig.loop || images.some(image => !image.image)
   const previousTargetImageRef = useRef<{ column: number, row: number }>({
     column: mosaicConfig.columns - 1,
     row: mosaicConfig.rows - 1
   })
 
+  const onAnimationFinished = useCallback((index) => {
+    setImages(images => {
+      const image = images[index]
+      const newImage = {
+        ...image,
+        animationFinished: true,
+        showBlockingTile: false
+      }
+
+      images[index] = newImage
+
+      if (canvasRef && gridRect) {
+        drawCanvasImage(canvasRef, newImage, index, mosaicConfig.columns, mosaicConfig.rows, gridRect, mosaicConfig.drawTileToCanvas)
+      }
+
+      return images;
+    })
+
+  }, [setImages, canvasRef, mosaicConfig.drawTileToCanvas, mosaicConfig.columns, mosaicConfig.rows, gridRect])
+
+  const renderToCanvas = useCallback((index) => {
+    // const image = images[index]
+    // const column = index % mosaicConfig.columns
+    // const row = Math.floor(index / mosaicConfig.columns)
+    // const width = Math.round((gridRect?.width || 1) / mosaicConfig.columns)
+    // const height = Math.round((gridRect?.height || 1) / mosaicConfig.rows)
+    // const x = column * width
+    // const y = row * height
+    // console.log("DRAWING")
+    // if (canvasRef) {
+    //   const img = new Image()
+    //   img.crossOrigin = "anonymous"
+    //   img.onload = () => {
+    //     const context = canvasRef.getContext("2d")
+    //     context.drawImage(img, x, y, width, height)
+    //   }
+    // }
+
+
+  }, [images.length, gridRect, mosaicConfig.columns, mosaicConfig.rows])
+
+  const addImage = useCallback(() => {
+    const {
+      column,
+      row
+    } = mosaicConfig.nextTileTarget(previousTargetImageRef.current.column, previousTargetImageRef.current.row, mosaicConfig)
+    const image = mosaicConfig.loadImage(column, row)
+    const targetIndex = (mosaicConfig.columns * row) + column
+
+    previousTargetImageRef.current = {column, row}
+
+    setImages(images => {
+      const newImages = [...images]
+      newImages[targetIndex] = {...defaultMosaicAnimatedImage, image}
+      return newImages
+    })
+  }, [
+    setImages,
+    previousTargetImageRef,
+    mosaicConfig.loadImage,
+    mosaicConfig.nextTileTarget,
+    mosaicConfig.columns,
+  ])
+
+  // Ensure the image array has the correct size.
   useEffect(() => {
     setImages((images) => {
       if (!images) { // Initialize image array
-        return Array.from(Array(mosaicConfig.columns * mosaicConfig.rows).keys()).map(_ => null)
+        return Array.from(Array(mosaicConfig.columns * mosaicConfig.rows).keys()).map(_ => defaultMosaicImage)
       } else if (images.length !== mosaicConfig.columns * mosaicConfig.rows) {
         return images
-          .concat(Array.from(Array(mosaicConfig.columns * mosaicConfig.rows).keys()).map(_ => null)) // Make sure the array has at least the required size
+          .concat(Array.from(Array(mosaicConfig.columns * mosaicConfig.rows).keys()).map(_ => defaultMosaicImage)) // Make sure the array has at least the required size
           .slice(0, mosaicConfig.columns * mosaicConfig.rows) // Trim it to fit the exact size
       }
 
@@ -32,30 +120,18 @@ const MosaicGrid = () => {
 
   useEffect(() => {
     if (shouldAddImages) {
-      const addImage = () => {
-        const {
-          column,
-          row
-        } = mosaicConfig.nextImageTarget(previousTargetImageRef.current.column, previousTargetImageRef.current.row)
-        const image = mosaicConfig.loadImage(column, row)
-        const targetIndex = (mosaicConfig.columns * row) + column
-
-        previousTargetImageRef.current = {column, row}
-
-        setImages(images => {
-          const newImages = [...images]
-          newImages[targetIndex] = image
-          return newImages
-        })
-      };
-
-      const interval = setInterval(addImage, mosaicConfig.imageInterval, mosaicConfig.columns)
+      const interval = setInterval(addImage, mosaicConfig.imageInterval)
 
       return () => {
         clearInterval(interval)
       }
     }
-  }, [(images?.length || 0), shouldAddImages, setImages, previousTargetImageRef, mosaicConfig.loop, mosaicConfig.imageInterval, mosaicConfig.loadImage, mosaicConfig.nextImageTarget, mosaicConfig.columns, mosaicConfig.rows])
+  }, [
+    (images?.length || 0),
+    shouldAddImages,
+    addImage,
+    mosaicConfig.imageInterval,
+  ])
 
   const containerStyle: CSSProperties = {
     position: "absolute",
@@ -69,7 +145,7 @@ const MosaicGrid = () => {
   const maxWidth = Math.round((gridRect?.width || 1) / mosaicConfig.columns) * mosaicConfig.columns
   const maxHeight = Math.round((gridRect?.height || 1) / mosaicConfig.rows) * mosaicConfig.rows
 
-  const wrapperStyle: CSSProperties =  {
+  const wrapperStyle: CSSProperties = {
     position: "absolute",
     width: `${maxWidth}px`,
     height: `${maxHeight}px`,
@@ -79,15 +155,22 @@ const MosaicGrid = () => {
   }
 
   return <div ref={gridRef} style={containerStyle}>
-    <div style={wrapperStyle}>
-      <MosaicOverlay/>
-    </div>
-    {gridRect && images.map((image, index) => <MosaicGridImage
-      key={index}
-      index={index}
-      image={image}
+    {gridRect && <MosaicGridProvider
+      images={images}
+      onAnimationFinished={onAnimationFinished}
+      renderToCanvas={renderToCanvas}
       gridRect={gridRect}
-    />)}
+    >
+      <div style={wrapperStyle}>
+        <MosaicOverlay/>
+      </div>
+
+      <div style={wrapperStyle}>
+        <MosaicCanvas canvasRef={canvasRef} setCanvasRef={setCanvasRef}/>
+      </div>
+
+      {images.map((image, index) => <Tile key={index} index={index}/>)}
+    </MosaicGridProvider>}
   </div>
 }
 

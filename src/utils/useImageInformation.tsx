@@ -1,30 +1,43 @@
-import React, {MutableRefObject, useEffect, useRef, useState} from "react"
-import {useMosaicConfig} from "./mosaicConfigProvider";
+import React from "react"
+import {useMosaicConfig} from "./MosaicConfigProvider";
 
-const useImageInformation = (index: number, gridRect: DOMRect): {
+export interface ImageInformation {
   column: number,
   row: number,
   width: number,
   height: number,
-  translateX: number,
-  translateY: number,
-} => {
-  const mosaicConfig = useMosaicConfig()
-  const column = index % mosaicConfig.columns
-  const row = Math.floor(index / mosaicConfig.columns)
-  const width = Math.round((gridRect?.width || 1) / mosaicConfig.columns)
-  const height = Math.round((gridRect?.height || 1) / mosaicConfig.rows)
-  const translateX = column * width
-  const translateY = row * height
+  x: number,
+  y: number,
+}
+
+export const getImageInformation = (index, columns, rows, gridWidth, gridHeight): ImageInformation => {
+  const column = index % columns
+  const row = Math.floor(index / columns)
+  const width = Math.round((gridWidth || 1) / columns)
+  const height = Math.round((gridHeight || 1) / rows)
+  const x = column * width
+  const y = row * height
 
   return {
     column,
     row,
     width,
     height,
-    translateX,
-    translateY,
+    x,
+    y,
   }
+}
+
+const useImageInformation = (index: number, gridRect: DOMRect): ImageInformation => {
+  const mosaicConfig = useMosaicConfig()
+
+  return getImageInformation(
+    index,
+    mosaicConfig.columns,
+    mosaicConfig.rows,
+    gridRect?.width,
+    gridRect?.height
+  )
 }
 
 export default useImageInformation

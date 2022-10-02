@@ -1,8 +1,8 @@
 import React, {MutableRefObject, useEffect, useRef, useState} from "react"
 
-const useElementBoundingRect = (): [MutableRefObject<any>, DOMRect | undefined] => {
+const useElementBoundingRect = (): [React.MutableRefObject<any>, (DOMRect | undefined)] => {
   const ref = useRef<any>()
-  const [rect, setRect] = useState<DOMRect | undefined>()
+  const [rect, setRect] = useState<DOMRect>()
 
   useEffect(() => {
     if (ref.current) {
