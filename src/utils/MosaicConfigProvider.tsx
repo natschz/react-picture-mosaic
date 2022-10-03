@@ -4,8 +4,8 @@ import {MosaicImage} from "./MosaicGridProvider";
 export interface MosaicConfig {
   columns: number
   rows: number
-  overlayImage: string
-  loadImage: (column: number, row: number) => string
+  mosaicImage: string
+  loadTileImage: (column: number, row: number) => string
   imageInterval: number
   imageSeed: string[]
   loop: boolean

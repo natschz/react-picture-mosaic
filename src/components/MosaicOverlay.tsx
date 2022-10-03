@@ -12,7 +12,7 @@ const MosaicOverlay = () => {
     width: "100%",
     height: "100%",
     overflow: "hidden",
-    backgroundImage: `url("${mosaicConfig.overlayImage}")`,
+    backgroundImage: `url("${mosaicConfig.mosaicImage}")`,
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     backgroundSize: "cover",

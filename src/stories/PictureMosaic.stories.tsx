@@ -1,7 +1,7 @@
 import React from 'react';
 import {ComponentStory, ComponentMeta} from '@storybook/react';
 import PictureMosaic from "../components/PictureMosaic";
-import overlayImage from "../../devAssets/overlayImage.jpg"
+import mosaicImage from "../../devAssets/mosaicImage.jpg"
 import galleryImage from "../../devAssets/galleryImage.jpg"
 
 export default {
@@ -36,8 +36,8 @@ export const Default = Template.bind({});
 Default.args = {
   columns: 10,
   rows: 10,
-  overlayImage: overlayImage,
-  loadImage: () => { return galleryImage },
+  mosaicImage: mosaicImage,
+  loadTileImage: () => { return galleryImage },
   imageInterval: 3000,
 };
 
@@ -45,9 +45,9 @@ export const Container = ContainerTemplate.bind({});
 Container.args = {
   columns: 10,
   rows: 10,
-  overlayImage:  `https://picsum.photos/1920/1080?random=${Math.random()}`,
+  mosaicImage:  `https://picsum.photos/1920/1080?random=${Math.random()}`,
   imageSeed: Array.from(Array(100).keys()).map(_ => `https://picsum.photos/1920/1080?random=${Math.random()}`),
-  loadImage: () => { return  `https://picsum.photos/1920/1080?random=${Math.random()}` },
+  loadTileImage: () => { return  `https://picsum.photos/1920/1080?random=${Math.random()}` },
   imageInterval: 3000,
 };
 
@@ -55,8 +55,8 @@ export const Seeded = Template.bind({});
 Seeded.args = {
   columns: 10,
   rows: 10,
-  overlayImage: "https://picsum.photos/1920/1080",
-  loadImage: () => { return `https://picsum.photos/1920/1080?random=${Math.random()}` },
+  mosaicImage: "https://picsum.photos/1920/1080",
+  loadTileImage: () => { return `https://picsum.photos/1920/1080?random=${Math.random()}` },
   imageSeed: Array.from(Array(100).keys()).map(_ => `https://picsum.photos/1920/1080?random=${Math.random()}`),
   imageInterval: 3000,
 };
@@ -65,8 +65,8 @@ export const BigSeeded = Template.bind({});
 BigSeeded.args = {
   columns: 25,
   rows: 25,
-  overlayImage: "https://picsum.photos/1920/1080",
-  loadImage: () => { return `https://picsum.photos/1920/1080?random=${Math.random()}` },
+  mosaicImage: "https://picsum.photos/1920/1080",
+  loadTileImage: () => { return `https://picsum.photos/1920/1080?random=${Math.random()}` },
   imageSeed: Array.from(Array(625).keys()).map(_ => `https://picsum.photos/1920/1080?random=${Math.random()}`),
   imageInterval: 3000,
 };
@@ -76,7 +76,7 @@ RandomImage.args = {
   loop: false,
   columns: 50,
   rows: 50,
-  overlayImage: "https://picsum.photos/1920/1080",
-  loadImage: () => { return `https://picsum.photos/1920/1080?random=${Math.random()}` },
+  mosaicImage: "https://picsum.photos/1920/1080",
+  loadTileImage: () => { return `https://picsum.photos/1920/1080?random=${Math.random()}` },
   imageInterval: 3000,
 };

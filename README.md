@@ -19,7 +19,7 @@ npm i --save react-picture-mosaic
 ```jsx
 import PictureMosaic from "react-picture-mosaic";
 
-const loadImage = (column, row) => {
+const loadTileImage = (column, row) => {
   return "https://path.to.image"
 }
 
@@ -38,8 +38,8 @@ const containerStyle = {
     <PictureMosaic
       columns={15}
       rows={10}
-      overlayImage={"https://path.to.image"}
-      loadImage={loadImage}
+      mosaicImage={"https://path.to.image"}
+      loadTileImage={loadTileImage}
       imageInterval={3000}
     />
 </div>
@@ -158,10 +158,10 @@ Number of columns for the grid
 ### `rows: number`
 Number of rows for the grid
 
-### `overlayImage: string`
+### `mosaicImage: string`
 Image which the whole mosaic builds up to
 
-### `loadImage: (column: number, row: number) => string`
+### `loadTileImage: (column: number, row: number) => string`
 Called everytime a new image is added two the grid, where `column` and `row` is the targeted tile position.<br/>
 This should return the path to the image that should be shown on this tile.
 

@@ -11,8 +11,8 @@ import {MosaicImage} from "../utils/MosaicGridProvider";
 export interface PictureMosaicProps {
   columns: number
   rows: number
-  overlayImage: string
-  loadImage: (column: number, row: number) => string
+  mosaicImage: string
+  loadTileImage: (column: number, row: number) => string
   imageInterval: number
 
   imageSeed?: string[]
@@ -31,8 +31,8 @@ const PictureMosaic = (props: PictureMosaicProps) => {
     return {
       columns: props.columns,
       rows: props.rows,
-      overlayImage: props.overlayImage,
-      loadImage: props.loadImage,
+      mosaicImage: props.mosaicImage,
+      loadTileImage: props.loadTileImage,
       imageInterval: props.imageInterval,
 
       imageSeed: props.imageSeed || [],

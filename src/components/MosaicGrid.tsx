@@ -66,7 +66,7 @@ const MosaicGrid = () => {
       column,
       row
     } = mosaicConfig.nextTileTarget(previousTargetImageRef.current.column, previousTargetImageRef.current.row, mosaicConfig)
-    const image = mosaicConfig.loadImage(column, row)
+    const image = mosaicConfig.loadTileImage(column, row)
     const targetIndex = (mosaicConfig.columns * row) + column
 
     previousTargetImageRef.current = {column, row}
@@ -79,7 +79,7 @@ const MosaicGrid = () => {
   }, [
     setImages,
     previousTargetImageRef,
-    mosaicConfig.loadImage,
+    mosaicConfig.loadTileImage,
     mosaicConfig.nextTileTarget,
     mosaicConfig.columns,
   ])
