@@ -6,6 +6,7 @@ import Tile from "./mosaicGrid/Tile";
 import {MosaicGridProvider, MosaicImage} from "../utils/MosaicGridProvider";
 import {getImageInformation} from "../utils/useImageInformation";
 import MosaicCanvas, {drawCanvasImage} from "./MosaicCanvas";
+import usePageVisibility from "../utils/usePageVisibility";
 
 const defaultMosaicImage: MosaicImage = {
   animationFinished: false,
@@ -27,6 +28,7 @@ const defaultMosaicSeedImage: MosaicImage = {
 
 const MosaicGrid = () => {
   const mosaicConfig = useMosaicConfig()
+  const isPageVisible = usePageVisibility()
   const [gridRef, gridRect] = useElementBoundingRect()
   const [canvasRef, setCanvasRef] = useState<HTMLCanvasElement>()
   const [images, setImages] = useState<MosaicImage[]>(mosaicConfig.imageSeed.map(image => ({
@@ -58,27 +60,6 @@ const MosaicGrid = () => {
     })
 
   }, [setImages, canvasRef, mosaicConfig.drawTileToCanvas, mosaicConfig.columns, mosaicConfig.rows, gridRect])
-
-  const renderToCanvas = useCallback((index) => {
-    // const image = images[index]
-    // const column = index % mosaicConfig.columns
-    // const row = Math.floor(index / mosaicConfig.columns)
-    // const width = Math.round((gridRect?.width || 1) / mosaicConfig.columns)
-    // const height = Math.round((gridRect?.height || 1) / mosaicConfig.rows)
-    // const x = column * width
-    // const y = row * height
-    // console.log("DRAWING")
-    // if (canvasRef) {
-    //   const img = new Image()
-    //   img.crossOrigin = "anonymous"
-    //   img.onload = () => {
-    //     const context = canvasRef.getContext("2d")
-    //     context.drawImage(img, x, y, width, height)
-    //   }
-    // }
-
-
-  }, [images.length, gridRect, mosaicConfig.columns, mosaicConfig.rows])
 
   const addImage = useCallback(() => {
     const {
@@ -119,7 +100,7 @@ const MosaicGrid = () => {
   }, [setImages, mosaicConfig.columns, mosaicConfig.rows])
 
   useEffect(() => {
-    if (shouldAddImages) {
+    if (shouldAddImages && isPageVisible) {
       const interval = setInterval(addImage, mosaicConfig.imageInterval)
 
       return () => {
@@ -129,6 +110,7 @@ const MosaicGrid = () => {
   }, [
     (images?.length || 0),
     shouldAddImages,
+    isPageVisible,
     addImage,
     mosaicConfig.imageInterval,
   ])
