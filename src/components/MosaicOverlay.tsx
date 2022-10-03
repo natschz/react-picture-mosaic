@@ -5,7 +5,7 @@ const MosaicOverlay = () => {
   const mosaicConfig = useMosaicConfig()
 
   let containerStyle: CSSProperties = {
-    zIndex: 200,
+    zIndex: 250,
     position: "absolute",
     left: 0,
     top: 0,
@@ -16,7 +16,7 @@ const MosaicOverlay = () => {
     backgroundRepeat: "no-repeat",
     backgroundPosition: "center",
     backgroundSize: "cover",
-    mixBlendMode: "overlay",
+    mixBlendMode: "lighten",
     ...mosaicConfig.overlayStyle
   }
 

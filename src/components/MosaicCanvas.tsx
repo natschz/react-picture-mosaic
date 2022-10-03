@@ -34,6 +34,7 @@ const MosaicCanvas = ({canvasRef, setCanvasRef}: MosaicCanvasProps) => {
 
   let containerStyle: CSSProperties = {
     zIndex: 200,
+    opacity: 0.3,
     position: "absolute",
     left: 0,
     top: 0,

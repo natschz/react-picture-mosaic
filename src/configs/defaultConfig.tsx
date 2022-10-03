@@ -51,8 +51,6 @@ export const defaultCreateTileStyle = (x: number, y: number, width: number, heig
 }
 
 export const defaultCanvasStyle: CSSProperties = {
-  zIndex: 400,
-  opacity: 0.3,
 }
 
 export const defaultNextTileTarget = (previousColumn: number, previousRow: number, config: MosaicConfig): { column: number, row: number } => {
