@@ -32,7 +32,7 @@ export const defaultCreateTileAnimations = (column: number, row: number, element
         duration: 2000
       },
       zIndex: 400,
-      opacity: 0.3,
+      opacity: 0.5,
       width: `${width}px`,
       height: `${height}px`,
       transform: `translate(${translateX}px, ${translateY}px)`
@@ -43,15 +43,14 @@ export const defaultCreateTileAnimations = (column: number, row: number, element
 export const defaultCreateTileStyle = (x: number, y: number, width: number, height: number): CSSProperties => {
   return {
     zIndex: 400,
-    opacity: 0.3,
+    opacity: 0.5,
     width: `${width}px`,
     height: `${height}px`,
     transform: `translate(${x}px, ${y}px)`
   }
 }
 
-export const defaultCanvasStyle: CSSProperties = {
-}
+export const defaultCanvasStyle: CSSProperties = {}
 
 export const defaultNextTileTarget = (previousColumn: number, previousRow: number, config: MosaicConfig): { column: number, row: number } => {
   const maxIndex = config.columns * config.rows
