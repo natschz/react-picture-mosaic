@@ -56,7 +56,7 @@ const MosaicGrid = () => {
         drawCanvasImage(canvasRef, newImage, index, mosaicConfig.columns, mosaicConfig.rows, gridRect, mosaicConfig.drawTileToCanvas)
       }
 
-      return images;
+      return [...images];
     })
 
   }, [setImages, canvasRef, mosaicConfig.drawTileToCanvas, mosaicConfig.columns, mosaicConfig.rows, gridRect])
