@@ -73,7 +73,11 @@ const MosaicGrid = () => {
 
     setImages(images => {
       const newImages = [...images]
+      const hasImage = !!newImages[targetIndex].image
       newImages[targetIndex] = {...defaultMosaicAnimatedImage, image}
+      if (hasImage) {
+        newImages[targetIndex].showBlockingTile = false
+      }
       return newImages
     })
   }, [
