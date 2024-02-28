@@ -15,11 +15,10 @@ const BlockingTile = ({index}: MosaicGridBlockingDivProps) => {
   let blockDivStyle: CSSProperties = {
     display: "inline-block",
     position: "absolute",
-    left: 0,
-    top: 0,
+    left: `${x}px`,
+    top: `${y}px`,
     width: `${width}px`,
     height: `${height}px`,
-    transform: `translate(${x}px, ${y}px)`,
     zIndex: 300,
     backgroundColor: "white",
     ...mosaicConfig.blockingTileStyle
